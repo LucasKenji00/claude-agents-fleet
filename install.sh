@@ -44,5 +44,15 @@ PYEOF
 else
   echo "python3 ausente: defina \"model\": \"claude-fable-5-1\" em $SETTINGS manualmente."
 fi
+# Cérebro (memória central): clona ou atualiza ~/claude-brain quando houver acesso ao GitHub
+BRAIN="${HOME}/claude-brain"
+if [[ -d "$BRAIN/.git" ]]; then
+  git -C "$BRAIN" pull --rebase --autostash -q && echo "Cérebro atualizado em $BRAIN." || echo "Cérebro presente em $BRAIN (pull falhou; segue com a cópia local)."
+elif git clone -q --depth 50 https://github.com/LucasKenji00/claude-brain "$BRAIN" 2>/dev/null; then
+  echo "Cérebro clonado em $BRAIN."
+else
+  echo "Cérebro não clonado (sem acesso ao repo privado neste ambiente). A sessão pedirá para vincular quando precisar."
+fi
+
 echo
 echo "Pronto. Abra uma nova sessão do Claude Code e rode /agents para conferir."

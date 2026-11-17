@@ -56,3 +56,26 @@ Tarefas independentes -> dispare vários agentes na mesma mensagem. Não seriali
 - Mandar Haiku decidir arquitetura ou julgar se algo é bug.
 - Mandar Opus formatar um Markdown.
 - Pedir ao `triage` quando a tabela acima já responde.
+
+# Cérebro (memória central): `LucasKenji00/claude-brain`
+
+O usuário trabalha de vários computadores e na nuvem. A memória que precisa sobreviver entre sessões vive no repositório privado `claude-brain`, clonado em `~/claude-brain`. Sem ele, cada sessão começa do zero; com ele, tudo está conectado.
+
+## No início de toda sessão
+1. Se `~/claude-brain/BRAIN.md` existe: leia `BRAIN.md` e `projects/INDEX.md` (use `scout` se for ler mais do que isso). Identifique o projeto da sessão atual e leia `projects/<slug>.md` correspondente.
+2. Se não existe e você está na nuvem (ferramenta `add_repo` disponível): chame `add_repo` com owner `LucasKenji00`, repo `claude-brain`, access `push`; depois clone em `~/claude-brain` com `--depth 50`. Se o usuário recusar ou falhar, siga sem o cérebro e avise em uma linha.
+3. Se não existe e você está num computador do usuário: tente `git clone https://github.com/LucasKenji00/claude-brain ~/claude-brain`. Se falhar, avise em uma linha e siga.
+4. Faça `git -C ~/claude-brain pull --rebase --autostash -q` antes de ler, para pegar o que outra máquina gravou.
+
+## Ao final de trabalho relevante (não em toda mensagem)
+Relevante = decisão tomada, entrega feita, número/preço/regra definido, pendência nova, projeto novo. Então:
+1. Acrescente ao `log/AAAA-MM-DD.md` (crie se não existir) de 1 a 5 bullets: o que foi feito, decisões, pendências. Prefixe com o nome do projeto.
+2. Atualize `projects/<slug>.md` (estado atual, decisões, pendências, links de artefatos/sessões). Projeto novo: crie o arquivo e a linha em `projects/INDEX.md`.
+3. Rode `~/claude-brain/sync.sh "<projeto>: <resumo curto>"`. Se o push falhar, diga ao usuário em uma linha; não tente contornar.
+Use `scribe` (Haiku) para escrever essas entradas quando o conteúdo já estiver claro; você só revisa.
+
+## Regras do cérebro
+- Nunca gravar segredos (chaves, senhas, tokens, dados de cartão). Apontar onde estão.
+- Entradas curtas, factuais, datadas. Sem opinião, sem repetir o que já está lá.
+- Em dúvida se algo deve entrar, pergunte ao usuário em uma linha no fim da resposta.
+- O cérebro é do usuário: se ele pedir para apagar ou corrigir algo, faça e sincronize.
