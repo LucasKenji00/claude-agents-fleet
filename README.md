@@ -22,12 +22,26 @@ Os aliases `haiku`/`sonnet`/`opus` apontam sempre para a versão atual de cada f
 
 ## Instalar
 
+### Na sua máquina (ambiente local, ex.: "Plataforma prepaid")
+
 ```bash
-./install.sh            # usuário: ~/.claude/agents + ~/.claude/CLAUDE.md (vale em todo projeto)
+./install.sh            # usuário: ~/.claude/agents + ~/.claude/CLAUDE.md + modelo padrão Fable 5.1 (vale em todo projeto)
 ./install.sh --project  # projeto: ./.claude/agents + ./.claude/CLAUDE.md (versionável)
 ```
 
+Instalação única; persiste entre sessões e projetos.
+
+### Na nuvem (claude.ai/code)
+
+O contêiner da nuvem nasce limpo em toda sessão, então a frota precisa ser instalada pelo **Setup script** do ambiente. O arquivo `setup-script.sh` é autocontido (frota compactada em base64) e cabe no limite do campo. Cole-o em: menu do ambiente na barra de título da sessão > Edit > Setup script. Coloque no ambiente **Default** para valer em todos os repositórios.
+
+Editou um agente? Rode `./make-setup-script.sh` e cole o novo `setup-script.sh` no ambiente.
+
 Depois abra uma sessão nova do Claude Code e rode `/agents` para ver a lista. Se o Fable não estiver delegando o suficiente, diga "use a frota" ou "delegue isso ao coder" nas primeiras vezes; a descrição de cada agente já diz "use PROATIVAMENTE", então ele deve pegar o hábito.
+
+### Modelo orquestrador
+
+`install.sh` grava `"model": "claude-fable-5-1"` em `settings.json` se ainda não houver modelo definido. Na interface web o seletor de modelo da sessão tem prioridade; deixe-o em Fable 5.1.
 
 ## Ajustes
 
