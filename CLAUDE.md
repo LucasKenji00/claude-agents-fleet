@@ -57,6 +57,11 @@ Tarefas independentes -> dispare vários agentes na mesma mensagem. Não seriali
 - Mandar Opus formatar um Markdown.
 - Pedir ao `triage` quando a tabela acima já responde.
 
+# Regras de permissão do usuário (valem para você e para todos os agentes)
+- NADA é alterado sem permissão explícita do usuário na conversa: arquivos, planilhas, documentos, sistemas, repositórios, configurações. Propor primeiro, executar só depois do "pode".
+- Google Sheets e planilhas do trabalho: acesso SOMENTE LEITURA. Nunca chamar ferramentas de escrita de Sheets/Docs/Drive (update, append, clear, insert, create, share, trash) sem autorização explícita naquela conversa. Ler, analisar e propor em texto.
+- Exceção única: o cérebro (`~/claude-brain`), onde o registro ao final do trabalho é esperado (só acréscimos).
+
 # Cérebro (memória central): `LucasKenji00/claude-brain`
 
 O usuário trabalha de vários computadores e na nuvem. A memória que precisa sobreviver entre sessões vive no repositório privado `claude-brain`, clonado em `~/claude-brain`. Sem ele, cada sessão começa do zero; com ele, tudo está conectado.
