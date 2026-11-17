@@ -54,3 +54,18 @@ Depois abra uma sessão nova do Claude Code e rode `/agents` para ver a lista. S
 ## Adicionar um agente novo
 
 Crie `agents/<nome>.md` com frontmatter (`name`, `description`, `model`, `effort`, `tools`) e um corpo com: papel, fluxo, regras, formato de resposta terminando em `STATUS: ...`. Adicione a linha dele na tabela de `CLAUDE.md` e em `agents/triage.md`.
+
+## Duas contas GitHub (pessoal e empresa)
+
+Como funciona o acesso no Claude Code na nuvem:
+
+- Cada conta claude.ai conecta **uma** identidade GitHub (hoje: a sua pessoal). O acesso aos repositórios vem do **Claude GitHub App** instalado no dono do repositório (sua conta ou uma organização).
+- A frota não depende de qual GitHub está conectado: ela é instalada pelo setup script do ambiente, em qualquer repositório que a sessão abrir.
+
+Cenários:
+
+1. **Repos da empresa estão numa Organização GitHub.** Peça a um owner da org para instalar o Claude GitHub App nela (mesma página: claude.ai/connect-github, "Install"). Sua conta pessoal precisa ser membro da org com acesso aos repos. Resultado: pessoal e empresa na mesma conta Claude, mesma frota, mesmo ambiente Default.
+2. **Repos da empresa estão em outra conta de usuário GitHub (não org).** Opções: (a) o dono adiciona sua conta pessoal como colaborador e instala o App nessa conta; ou (b) a empresa tem/terá a própria organização Claude: conecte o GitHub corporativo lá e cole o mesmo `setup-script.sh` no ambiente Default dessa organização. A frota é portátil.
+3. **Quer separar o que cada lado usa.** Instale por projeto (`./install.sh --project`) e faça commit da pasta `.claude/` no repo: todo mundo da equipe recebe a mesma frota, e você pode manter versões diferentes para pessoal e empresa. Para restringir ferramentas por contexto, use `permissions.allow/deny` no `.claude/settings.json` do projeto.
+
+Na sua máquina (ambiente local), o `gh` suporta várias contas: `gh auth login` para cada uma e `gh auth switch` para alternar. Para o git usar nome/e-mail certos por pasta, use `includeIf` no `~/.gitconfig` apontando para `~/trabalho/` e `~/pessoal/`.
