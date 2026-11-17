@@ -1,0 +1,42 @@
+# Frota de agentes para Claude Code
+
+Treze subagentes em três camadas de custo, mais uma política de roteamento que faz o modelo principal (Fable 5.1) agir como cérebro e delegar o trabalho mecânico aos modelos mais baratos.
+
+## Camadas
+
+| Camada | Modelo | Agentes | Para quê |
+|---|---|---|---|
+| Verde | Haiku 5.5 (`haiku`) | `triage`, `scout`, `scribe`, `runner` | mecânico, repetitivo, leitura, execução |
+| Azul | Sonnet 5.5 (`sonnet`) | `coder`, `tester`, `reviewer`, `researcher`, `writer`, `analyst` | trabalho padrão de engenharia, pesquisa, texto, dados |
+| Roxo | Opus 5.5 (`opus`) | `architect`, `debugger`, `security` | raciocínio difícil, decisões de design, causa raiz |
+| Cérebro | Fable 5.1 (sessão principal) | — | conversa, decisões, integração, revisão final |
+
+Os aliases `haiku`/`sonnet`/`opus` apontam sempre para a versão atual de cada família, então a frota se atualiza sozinha quando sai modelo novo. Se quiser fixar, troque por um ID completo (ex.: `model: claude-haiku-5-5`).
+
+## Como os agentes "trocam" entre si
+
+1. **Escalonamento para cima.** Todo agente termina com `STATUS: DONE | PARTIAL | ESCALATE(agente): motivo`. O orquestrador lê isso e redespacha para o agente indicado, passando o relatório anterior. Escada padrão: Haiku -> Sonnet -> Opus -> Fable.
+2. **Delegação para baixo.** `coder`, `tester`, `debugger`, `architect` e `security` têm a ferramenta `Agent` e podem chamar `scout`, `runner` e `scribe` sozinhos, sem passar pelo Fable. A regra "só para agentes mais baratos" está no prompt deles (o Claude Code não impõe lista de tipos permitidos dentro de subagentes, então é disciplina de prompt).
+3. **Planos etiquetados.** `architect` devolve cada passo do plano com `[agente]`, e o orquestrador despacha cada um ao agente certo, em paralelo quando possível.
+4. **Classificador barato.** `triage` (Haiku) decide quem faz o quê quando não é óbvio, por uma fração de centavo.
+
+## Instalar
+
+```bash
+./install.sh            # usuário: ~/.claude/agents + ~/.claude/CLAUDE.md (vale em todo projeto)
+./install.sh --project  # projeto: ./.claude/agents + ./.claude/CLAUDE.md (versionável)
+```
+
+Depois abra uma sessão nova do Claude Code e rode `/agents` para ver a lista. Se o Fable não estiver delegando o suficiente, diga "use a frota" ou "delegue isso ao coder" nas primeiras vezes; a descrição de cada agente já diz "use PROATIVAMENTE", então ele deve pegar o hábito.
+
+## Ajustes
+
+- **Esforço**: `effort: low|medium|high|xhigh|max` no frontmatter. Haiku está em `low`, Sonnet em `medium`, Opus em `high`. Aumente só onde medir ganho.
+- **Ferramentas**: `tools:` é allowlist. Para dar MCP a um agente: `tools: Read, Grep, mcp__github__*`. Para bloquear comandos específicos de Bash, use `permissions.deny` no `settings.json` (vale para a sessão e para os subagentes).
+- **Memória persistente**: adicione `memory: user` (vale entre projetos) ou `memory: project` (versionado) a um agente para que ele acumule aprendizados em `MEMORY.md`. Requer auto-memory ligado.
+- **Forçar um modelo em todos**: variáveis `CLAUDE_CODE_SUBAGENT_MODEL=haiku` e `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1`.
+- **Isolamento**: `isolation: worktree` faz o agente trabalhar num worktree git temporário (útil para `coder` em mudanças arriscadas).
+
+## Adicionar um agente novo
+
+Crie `agents/<nome>.md` com frontmatter (`name`, `description`, `model`, `effort`, `tools`) e um corpo com: papel, fluxo, regras, formato de resposta terminando em `STATUS: ...`. Adicione a linha dele na tabela de `CLAUDE.md` e em `agents/triage.md`.
