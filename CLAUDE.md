@@ -62,7 +62,7 @@ Tarefas independentes -> dispare vários agentes na mesma mensagem. Não seriali
 O usuário trabalha de vários computadores e na nuvem. A memória que precisa sobreviver entre sessões vive no repositório privado `claude-brain`, clonado em `~/claude-brain`. Sem ele, cada sessão começa do zero; com ele, tudo está conectado.
 
 ## No início de toda sessão
-1. Se `~/claude-brain/BRAIN.md` existe: leia `BRAIN.md` e `projects/INDEX.md` (use `scout` se for ler mais do que isso). Identifique o projeto da sessão atual e leia `projects/<slug>.md` correspondente.
+1. Se `~/claude-brain/BRAIN.md` existe: leia `~/claude-brain/CLAUDE.md` (índice e regras do cérebro), `BRAIN.md` e `projects/INDEX.md` (use `scout` se for ler mais do que isso). Identifique o projeto da sessão atual e leia `projects/<slug>.md` correspondente.
 2. Se não existe e você está na nuvem (ferramenta `add_repo` disponível): chame `add_repo` com owner `LucasKenji00`, repo `claude-brain`, access `push`; depois clone em `~/claude-brain` com `--depth 50`. Se o usuário recusar ou falhar, siga sem o cérebro e avise em uma linha.
 3. Se não existe e você está num computador do usuário: tente `git clone https://github.com/LucasKenji00/claude-brain ~/claude-brain`. Se falhar, avise em uma linha e siga.
 4. Faça `git -C ~/claude-brain pull --rebase --autostash -q` antes de ler, para pegar o que outra máquina gravou.
@@ -71,7 +71,9 @@ O usuário trabalha de vários computadores e na nuvem. A memória que precisa s
 Relevante = decisão tomada, entrega feita, número/preço/regra definido, pendência nova, projeto novo. Então:
 1. Acrescente ao `log/AAAA-MM-DD.md` (crie se não existir) de 1 a 5 bullets: o que foi feito, decisões, pendências. Prefixe com o nome do projeto.
 2. Atualize `projects/<slug>.md` (estado atual, decisões, pendências, links de artefatos/sessões). Projeto novo: crie o arquivo e a linha em `projects/INDEX.md`.
-3. Rode `~/claude-brain/sync.sh "<projeto>: <resumo curto>"`. Se o push falhar, diga ao usuário em uma linha; não tente contornar.
+3. Escreva ligações `[[slug|Título]]` entre páginas e `[[Nome]]` para pessoas/sistemas (é o que forma o grafo e o Obsidian).
+4. Rode `python3 ~/claude-brain/graph/build_graph.py` e depois `~/claude-brain/sync.sh "<projeto>: <resumo curto>"`. Se o push falhar, diga ao usuário em uma linha; não tente contornar.
+5. Se a ferramenta Artifact existir, republique a página do grafo na URL indicada em `~/claude-brain/graph/README.md`, com `graph/index.html` e `graph/graph.json`.
 Use `scribe` (Haiku) para escrever essas entradas quando o conteúdo já estiver claro; você só revisa.
 
 ## Regras do cérebro
