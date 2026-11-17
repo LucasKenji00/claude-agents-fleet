@@ -72,8 +72,8 @@ Relevante = decisão tomada, entrega feita, número/preço/regra definido, pend�
 1. Acrescente ao `log/AAAA-MM-DD.md` (crie se não existir) de 1 a 5 bullets: o que foi feito, decisões, pendências. Prefixe com o nome do projeto.
 2. Atualize `projects/<slug>.md` (estado atual, decisões, pendências, links de artefatos/sessões). Projeto novo: crie o arquivo e a linha em `projects/INDEX.md`.
 3. Escreva ligações `[[slug|Título]]` entre páginas e `[[Nome]]` para pessoas/sistemas (é o que forma o grafo e o Obsidian).
-4. Rode `python3 ~/claude-brain/graph/build_graph.py` e depois `~/claude-brain/sync.sh "<projeto>: <resumo curto>"`. Se o push falhar, diga ao usuário em uma linha; não tente contornar.
-5. Se a ferramenta Artifact existir, republique a página do grafo na URL indicada em `~/claude-brain/graph/README.md`, com `graph/index.html` e `graph/graph.json`.
+4. Rode `~/claude-brain/sync.sh "<projeto>: <resumo curto>"`. Se o push falhar, diga ao usuário em uma linha; não tente contornar.
+5. O grafo (`graph/`) NÃO é regenerado nem republicado automaticamente. Só quando o usuário pedir: `python3 ~/claude-brain/graph/build_graph.py`, sincronizar e republicar a página na URL de `~/claude-brain/graph/README.md`.
 Use `scribe` (Haiku) para escrever essas entradas quando o conteúdo já estiver claro; você só revisa.
 
 ## Regras do cérebro
