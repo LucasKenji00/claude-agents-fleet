@@ -14,13 +14,28 @@ cp "$HERE"/agents/*.md "$DEST/agents/"
 echo "Agentes instalados em $DEST/agents:"
 ls "$DEST/agents"
 
-MARK="# Frota de agentes — política de roteamento do orquestrador"
-if [[ -f "$DEST/CLAUDE.md" ]] && grep -qF "$MARK" "$DEST/CLAUDE.md"; then
-  echo "Política de roteamento já presente em $DEST/CLAUDE.md (não alterada)."
-else
-  { [[ -f "$DEST/CLAUDE.md" ]] && printf '\n\n'; cat "$HERE/CLAUDE.md"; } >> "$DEST/CLAUDE.md"
-  echo "Política de roteamento adicionada a $DEST/CLAUDE.md."
-fi
+# CLAUDE.md global: o bloco da frota fica entre marcadores e é substituído a cada instalação;
+# tudo que estiver fora dos marcadores (conteúdo do usuário) é preservado.
+python3 - "$DEST/CLAUDE.md" "$HERE/CLAUDE.md" <<'PYEOF2'
+import os, sys
+dest, src = sys.argv[1], sys.argv[2]
+S, E = "<!-- claude-agents-fleet:start -->", "<!-- claude-agents-fleet:end -->"
+LEGACY = "# Frota de agentes — política de roteamento do orquestrador"
+block = S + "\n" + open(src, encoding="utf-8").read().rstrip("\n") + "\n" + E + "\n"
+cur = open(dest, encoding="utf-8").read() if os.path.exists(dest) else ""
+if S in cur and E in cur:
+    a, b = cur.index(S), cur.index(E) + len(E)
+    cur = cur[:a] + block.rstrip("\n") + cur[b:]
+    msg = "bloco da frota atualizado"
+elif LEGACY in cur:
+    cur = cur[:cur.index(LEGACY)].rstrip("\n") + ("\n\n" if cur.strip() else "") + block
+    msg = "bloco antigo da frota substituído"
+else:
+    cur = (cur.rstrip("\n") + "\n\n" if cur.strip() else "") + block
+    msg = "bloco da frota adicionado"
+open(dest, "w", encoding="utf-8").write(cur)
+print("CLAUDE.md global:", msg, "em", dest)
+PYEOF2
 
 # Modelo padrão do orquestrador (só define se ainda não houver um configurado)
 SETTINGS="$DEST/settings.json"
