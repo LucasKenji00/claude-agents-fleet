@@ -17,8 +17,7 @@ EOF
 TMP="$(mktemp -d)"
 tar cJf "$TMP/fleet.tar.xz" -C "$HERE" agents CLAUDE.md install.sh
 {
-  echo '# Frota de agentes Claude Code embutida (agents/, CLAUDE.md, install.sh em tar.xz/base64) -> ~/.claude'
-  echo 'set -e; D=$(mktemp -d)'
+  echo 'set -e; D=$(mktemp -d)  # frota embutida (agents/, CLAUDE.md, install.sh em tar.xz/base64) -> ~/.claude'
   echo "base64 -d > \"\$D/f.tar.xz\" <<'FLEET'"
   base64 -w 198 "$TMP/fleet.tar.xz"
   echo 'FLEET'

@@ -71,5 +71,9 @@ else
   echo "Cérebro não clonado (sem acesso ao repo privado neste ambiente). A sessão pedirá para vincular quando precisar."
 fi
 
+# Skills e plugins do usuário: vivem no cérebro (skills/ + tools/install_skills.sh)
+[[ -f "$BRAIN/tools/install_skills.sh" ]] && { bash "$BRAIN/tools/install_skills.sh" || echo "install_skills.sh falhou."; } \
+  || echo "Skills do cérebro não instaladas agora (sem cérebro); a sessão instala ao ler o cérebro."
+
 echo
 echo "Pronto. Abra uma nova sessão do Claude Code e rode /agents para conferir."
