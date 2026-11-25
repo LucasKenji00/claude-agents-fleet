@@ -49,15 +49,17 @@ if os.path.exists(p):
         d = json.load(open(p))
     except Exception:
         d = {}
-if "model" not in d:
-    d["model"] = "claude-fable-5-1"
+DEFAULT = "claude-opus-5-5"
+if "model" not in d or d.get("model") == "claude-fable-5-1":
+    antes = d.get("model")
+    d["model"] = DEFAULT
     json.dump(d, open(p, "w"), indent=2)
-    print("Modelo padrão definido: claude-fable-5-1 em", p)
+    print("Modelo padrão definido:", DEFAULT, "em", p, f"(antes: {antes})" if antes else "")
 else:
     print("Modelo padrão já definido em", p, ":", d["model"])
 PYEOF
 else
-  echo "python3 ausente: defina \"model\": \"claude-fable-5-1\" em $SETTINGS manualmente."
+  echo "python3 ausente: defina \"model\": \"claude-opus-5-5\" em $SETTINGS manualmente."
 fi
 # Cérebro (memória central): clona ou atualiza ~/claude-brain quando houver acesso ao GitHub
 BRAIN="${HOME}/claude-brain"

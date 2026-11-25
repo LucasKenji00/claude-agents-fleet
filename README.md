@@ -1,6 +1,6 @@
 # Frota de agentes para Claude Code
 
-Treze subagentes em três camadas de custo, mais uma política de roteamento que faz o modelo principal (Fable 5.1) agir como cérebro e delegar o trabalho mecânico aos modelos mais baratos.
+Treze subagentes em três camadas de custo, mais uma política de roteamento que faz o modelo principal da sessão (padrão Opus 5.5; Fable 5.2 sob demanda) agir como cérebro e delegar o trabalho mecânico aos modelos mais baratos.
 
 ## Camadas
 
@@ -9,7 +9,7 @@ Treze subagentes em três camadas de custo, mais uma política de roteamento que
 | Verde | Haiku 5.5 (`haiku`) | `triage`, `scout`, `scribe`, `runner` | mecânico, repetitivo, leitura, execução |
 | Azul | Sonnet 5.5 (`sonnet`) | `coder`, `tester`, `reviewer`, `researcher`, `writer`, `analyst` | trabalho padrão de engenharia, pesquisa, texto, dados |
 | Roxo | Opus 5.5 (`opus`) | `architect`, `debugger`, `security` | raciocínio difícil, decisões de design, causa raiz |
-| Cérebro | Fable 5.1 (sessão principal) | — | conversa, decisões, integração, revisão final |
+| Cérebro | Opus 5.5 (sessão principal; Fable 5.2 só sob demanda) | — | conversa, decisões, integração, revisão final |
 
 Os aliases `haiku`/`sonnet`/`opus` apontam sempre para a versão atual de cada família, então a frota se atualiza sozinha quando sai modelo novo. Se quiser fixar, troque por um ID completo (ex.: `model: claude-haiku-5-5`).
 
@@ -25,7 +25,7 @@ Os aliases `haiku`/`sonnet`/`opus` apontam sempre para a versão atual de cada f
 ### Na sua máquina (ambiente local, ex.: "Plataforma prepaid")
 
 ```bash
-./install.sh            # usuário: ~/.claude/agents + ~/.claude/CLAUDE.md + modelo padrão Fable 5.1 (vale em todo projeto)
+./install.sh            # usuário: ~/.claude/agents + ~/.claude/CLAUDE.md + modelo padrão Opus 5.5 (vale em todo projeto)
 ./install.sh --project  # projeto: ./.claude/agents + ./.claude/CLAUDE.md (versionável)
 ```
 
@@ -37,11 +37,11 @@ O contêiner da nuvem nasce limpo em toda sessão, então a frota precisa ser in
 
 Editou um agente? Rode `./make-setup-script.sh` e cole o novo `setup-script.sh` no ambiente.
 
-Depois abra uma sessão nova do Claude Code e rode `/agents` para ver a lista. Se o Fable não estiver delegando o suficiente, diga "use a frota" ou "delegue isso ao coder" nas primeiras vezes; a descrição de cada agente já diz "use PROATIVAMENTE", então ele deve pegar o hábito.
+Depois abra uma sessão nova do Claude Code e rode `/agents` para ver a lista. Se o orquestrador não estiver delegando o suficiente, diga "use a frota" ou "delegue isso ao coder" nas primeiras vezes; a descrição de cada agente já diz "use PROATIVAMENTE", então ele deve pegar o hábito.
 
 ### Modelo orquestrador
 
-`install.sh` grava `"model": "claude-fable-5-1"` em `settings.json` se ainda não houver modelo definido. Na interface web o seletor de modelo da sessão tem prioridade; deixe-o em Fable 5.1.
+`install.sh` grava `"model": "claude-opus-5-5"` em `settings.json` se não houver modelo definido, ou se o definido for o antigo padrão Fable 5.1. Qualquer outro modelo que você escolheu é mantido. Para tarefas muito difíceis, troque na sessão com `/model claude-fable-5-2` e volte depois.
 
 ## Ajustes
 
